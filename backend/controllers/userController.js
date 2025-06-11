@@ -85,3 +85,12 @@ export const logout = (req, res) => {
     console.log(error);
   }
 }
+
+export const getOtherUsers = async (req, res) => {
+  try {
+
+  } catch (error) {
+    console.log(error);
+
+  }
+}
