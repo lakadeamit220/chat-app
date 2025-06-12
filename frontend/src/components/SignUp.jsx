@@ -74,7 +74,7 @@ const Signup = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       console.log("Form submitted:", user);
       // Here you would typically send the data to your backend
@@ -100,7 +100,9 @@ const Signup = () => {
               type="text"
               placeholder="Full Name"
             />
-            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+            {errors.fullName && (
+              <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+            )}
           </div>
           <div>
             <label className="label p-2">
@@ -116,7 +118,9 @@ const Signup = () => {
               type="text"
               placeholder="Username"
             />
-            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+            {errors.username && (
+              <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+            )}
           </div>
           <div>
             <label className="label p-2">
@@ -132,7 +136,9 @@ const Signup = () => {
               type="password"
               placeholder="Password"
             />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
           <div>
             <label className="label p-2">
@@ -150,7 +156,11 @@ const Signup = () => {
               type="password"
               placeholder="Confirm Password"
             />
-            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
           <div className="flex items-center my-4">
             <div className="flex items-center">
@@ -178,7 +188,7 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className="btn btn-block btn-sm mt-2 border border-slate-700"
+              className="btn btn-block btn-sm mt-2 border border-slate-200"
             >
               Signup
             </button>
