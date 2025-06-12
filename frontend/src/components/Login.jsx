@@ -62,7 +62,7 @@ const Login = () => {
       );
 
       // Handle successful login
-      // console.log("Login successful:", response.data);
+      console.log("Login successful:", response.data);
       toast.success(response.data.username);
       // Store user data in local storage or context
       localStorage.setItem("user", JSON.stringify(response.data));
