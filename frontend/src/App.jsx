@@ -1,3 +1,8 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./components/HomePage";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+
 function App() {
   return (
     <div
@@ -10,7 +15,24 @@ function App() {
         minHeight: "100vh",
         width: "100%",
       }}
-    ></div>
+    >
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-7xl font-bold">404 Page Not Found</div>
+    </div>
   );
 }
 
