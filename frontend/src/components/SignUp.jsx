@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -17,6 +18,9 @@ const Signup = () => {
     confirmPassword: "",
     gender: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCheckbox = (gender) => {
     setUser({ ...user, gender });
@@ -76,8 +80,40 @@ const Signup = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form submitted:", user);
-      // Here you would typically send the data to your backend
+      setLoading(true);
+      try {
+        const requestData = {
+          fullName: user.fullName,
+          username: user.username,
+          confirmPassword: user.confirmPassword,
+          password: user.password,
+          gender: user.gender,
+        };
+
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/user/register",
+          JSON.stringify(requestData),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.data.success) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error(
+          "Signup error:",
+          error.response?.data?.message || error.message
+        );
+        alert(
+          error.response?.data?.message || "Signup failed. Please try again."
+        );
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -189,8 +225,9 @@ const Signup = () => {
             <button
               type="submit"
               className="btn btn-block btn-sm mt-2 border border-slate-200"
+              disabled={loading}
             >
-              Signup
+              {loading ? "Signing up..." : "Signup"}
             </button>
           </div>
         </form>

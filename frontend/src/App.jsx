@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
@@ -24,6 +25,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
+      <Toaster />
     </div>
   );
 }
