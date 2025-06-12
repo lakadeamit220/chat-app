@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -101,6 +102,7 @@ const Signup = () => {
         );
 
         if (response.data.success) {
+          toast.success(response.data.message);
           navigate("/login");
         }
       } catch (error) {
