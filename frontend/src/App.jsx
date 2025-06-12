@@ -10,9 +10,7 @@ function App() {
         minHeight: "100vh",
         width: "100%",
       }}
-    >
-      <h1 className="text-5xl text-center">Chat Application</h1>
-    </div>
+    ></div>
   );
 }
 
