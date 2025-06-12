@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -61,15 +62,16 @@ const Login = () => {
       );
 
       // Handle successful login
-      console.log("Login successful:", response.data);
-      
+      // console.log("Login successful:", response.data);
+      toast.success(response.data.username);
       // Store user data in local storage or context
       localStorage.setItem("user", JSON.stringify(response.data));
       
       // Redirect to home page or dashboard
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
+      // console.error("Login error:", error);
+      toast.error(error.response.data.message);
       setLoading(false);
       
       if (error.response) {
