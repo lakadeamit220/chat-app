@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthUser } from "../reduxStore/userSlice";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -14,6 +16,7 @@ const Login = () => {
     password: "",
   });
 
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
@@ -61,19 +64,19 @@ const Login = () => {
         }
       );
 
+      // Redirect to home page or dashboard
+      navigate("/");
       // Handle successful login
       console.log("Login successful:", response.data);
       toast.success(response.data.username);
+      dispatch(setAuthUser(response.data));
       // Store user data in local storage or context
-      localStorage.setItem("user", JSON.stringify(response.data));
-      
-      // Redirect to home page or dashboard
-      navigate("/");
+      //localStorage.setItem("user", JSON.stringify(response.data));
     } catch (error) {
       // console.error("Login error:", error);
       toast.error(error.response.data.message);
       setLoading(false);
-      
+
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -94,16 +97,26 @@ const Login = () => {
     <div className="flex justify-center items-center h-screen">
       <div className="max-w-xl mx-auto p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border-4">
         <h1 className="text-3xl font-bold text-center text-white">Login</h1>
-        
+
         {loginError && (
           <div className="alert alert-error my-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>{loginError}</span>
           </div>
         )}
-        
+
         <form onSubmit={onSubmitHandler} action="">
           <div>
             <label className="label p-2">
