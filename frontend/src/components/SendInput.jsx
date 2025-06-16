@@ -8,8 +8,8 @@ import {useDispatch,useSelector} from "react-redux";
 const SendInput = () => {
     const [message, setMessage] = useState("");
     const dispatch = useDispatch();
-    const {selectedUser} = useSelector(store=>store.user);
-    const {messages} = useSelector(store=>store.message);
+    // const {selectedUser} = useSelector(store=>store.user);
+    // const {messages} = useSelector(store=>store.message);
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
