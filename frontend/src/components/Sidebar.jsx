@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
-// import OtherUsers from './OtherUsers';
+import OtherUsers from './OtherUsers';
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ const Sidebar = () => {
         </button>
       </form>
       <div className="divider px-3"></div>
-      {/* <OtherUsers/>  */}
+      <OtherUsers/> 
       <div className="mt-2">
         <button onClick={logoutHandler} className="btn btn-sm">
           Logout
