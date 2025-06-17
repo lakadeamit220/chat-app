@@ -5,12 +5,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setAuthUser, setOtherUsers, setSelectedUser } from '../reduxStore/userSlice';
-//import { setMessages } from '../redux/messageSlice';
+import {
+  setAuthUser,
+  setOtherUsers,
+  setSelectedUser,
+} from "../reduxStore/userSlice";
+import { setMessages } from "../reduxStore/messageSlice";
 
 const Sidebar = () => {
   const [search, setSearch] = useState("");
-  // const {otherUsers} = useSelector(store=>store.user);
+  const { otherUsers } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -30,12 +34,14 @@ const Sidebar = () => {
   };
   const searchSubmitHandler = (e) => {
     e.preventDefault();
-    // const conversationUser = otherUsers?.find((user)=> user.fullName.toLowerCase().includes(search.toLowerCase()));
-    // if(conversationUser){
-    //     dispatch(setOtherUsers([conversationUser]));
-    // }else{
-    //     toast.error("User not found!");
-    // }
+    const conversationUser = otherUsers?.find((user) =>
+      user.fullName.toLowerCase().includes(search.toLowerCase())
+    );
+    if (conversationUser) {
+      dispatch(setOtherUsers([conversationUser]));
+    } else {
+      toast.error("User not found!");
+    }
   };
   return (
     <div className="border-r border-slate-500 p-4 flex flex-col">
