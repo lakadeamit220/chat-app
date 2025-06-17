@@ -12,6 +12,8 @@ const SendInput = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (!message.trim() || !selectedUser?._id) return;
+
     try {
       const res = await axios.post(
         `http://localhost:8080/api/v1/message/send/${selectedUser._id}`,
@@ -23,12 +25,16 @@ const SendInput = () => {
           withCredentials: true,
         }
       );
-      dispatch(setMessages([...messages, res?.data?.newMessage]));
+
+      if (res.data?.newMessage) {
+        dispatch(setMessages([...messages, res.data.newMessage]));
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error sending message:", error);
     }
     setMessage("");
   };
+
   return (
     <form onSubmit={onSubmitHandler} className="px-4 my-3">
       <div className="w-full relative">

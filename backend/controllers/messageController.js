@@ -25,7 +25,7 @@ export const sendMessage = async (req, res) => {
       gotConversation.messages.push(newMessage._id);
     };
     await gotConversation.save();
-    return res.status(200).json("tsl@gmail.com");
+    return res.status(200).json({ newMessage });
 
   } catch (error) {
     console.log(error);
