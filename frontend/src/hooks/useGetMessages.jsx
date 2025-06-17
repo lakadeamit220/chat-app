@@ -14,13 +14,13 @@ const useGetMessages = () => {
           `http://localhost:8080/api/v1/message/${selectedUser?._id}`
         );
         dispatch(setMessages(res.data));
-        console.log(res.data);
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
     };
     fetchMessages();
-  }, []);
+  }, [selectedUser?._id,setMessages]);
 };
 
 export default useGetMessages;
