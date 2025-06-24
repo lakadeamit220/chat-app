@@ -6,13 +6,13 @@ import SignUp from "./components/SignUp";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import io from "socket.io-client";
-import { useState } from "react";
 import { setSocket } from "./reduxStore/socketSlice";
 import { setOnlineUsers } from "./reduxStore/userSlice";
 
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (authUser) {
       const socketio = io("http://localhost:8080", {
@@ -20,13 +20,28 @@ function App() {
           userId: authUser._id,
         },
       });
+
       dispatch(setSocket(socketio));
-      socketio?.on("getOnlineUsers", (onlineUsers) => {
+
+      socketio.on("connect", () => {
+        console.log("Connected to socket.io server");
+      });
+
+      socketio.on("getOnlineUsers", (onlineUsers) => {
         dispatch(setOnlineUsers(onlineUsers));
       });
-      return () => socketio.close();
+
+      socketio.on("disconnect", () => {
+        console.log("Disconnected from socket.io server");
+      });
+
+      return () => {
+        socketio.off("getOnlineUsers");
+        socketio.close();
+      };
     }
-  }, [authUser]);
+  }, [authUser, dispatch]);
+
   return (
     <div
       style={{
