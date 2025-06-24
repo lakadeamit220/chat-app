@@ -1,57 +1,57 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import io from "socket.io-client";
 import { setSocket } from "./reduxStore/socketSlice";
 import { setOnlineUsers } from "./reduxStore/userSlice";
+import io from "socket.io-client";
 
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (authUser) {
-      const socketio = io("http://localhost:8080", {
-        query: {
-          userId: authUser._id,
-        },
-      });
+    if (!authUser?._id) return;
 
-      dispatch(setSocket(socketio));
+    console.log("Initializing socket connection for user:", authUser._id);
 
-      socketio.on("connect", () => {
-        console.log("Connected to socket.io server");
-      });
+    const socket = io("http://localhost:8080", {
+      query: { userId: authUser._id },
+      withCredentials: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
 
-      socketio.on("getOnlineUsers", (onlineUsers) => {
-        dispatch(setOnlineUsers(onlineUsers));
-      });
+    socket.on("connect", () => {
+      console.log("Socket connected with ID:", socket.id);
+      dispatch(setSocket(socket));
+    });
 
-      socketio.on("disconnect", () => {
-        console.log("Disconnected from socket.io server");
-      });
+    socket.on("getOnlineUsers", (users) => {
+      // Changed to match emit event name
+      console.log("Received online users:", users);
+      dispatch(setOnlineUsers(users));
+    });
 
-      return () => {
-        socketio.off("getOnlineUsers");
-        socketio.close();
-      };
-    }
-  }, [authUser, dispatch]);
+    socket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+    });
+
+    return () => {
+      console.log("Cleaning up socket connection");
+      socket.disconnect();
+    };
+  }, [authUser?._id, dispatch]);
 
   return (
     <div
+      className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage:
           "url('https://images.unsplash.com/photo-1620498590128-b780a069fdc0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        width: "100%",
       }}
     >
       <Router>
