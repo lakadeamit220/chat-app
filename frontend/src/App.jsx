@@ -3,8 +3,20 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import io from "socket.io-client";
+import { useState } from "react";
 
 function App() {
+  const [socket, setSocket] = useState(null);
+  const { authUser } = useSelector((store) => store.user);
+  useEffect(() => {
+    if (authUser) {
+      const socket = io("http://localhost:8080", {});
+      setSocket(socket);
+    }
+  }, [authUser]);
   return (
     <div
       style={{
