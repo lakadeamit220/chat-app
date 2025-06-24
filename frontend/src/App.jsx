@@ -1,24 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import { useDispatch, useSelector } from "react-redux";
-import { setSocket } from "./reduxStore/socketSlice";
 import { setOnlineUsers } from "./reduxStore/userSlice";
 import io from "socket.io-client";
 
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const socketRef = useRef(null); // Store socket instance in a ref
+  const socketRef = useRef(null);
 
   useEffect(() => {
     if (!authUser?._id) return;
 
     console.log("Initializing socket connection for user:", authUser._id);
-    
+
     const socket = io("http://localhost:8080", {
       query: { userId: authUser._id },
       withCredentials: true,
@@ -26,11 +25,10 @@ function App() {
       reconnectionDelay: 1000,
     });
 
-    socketRef.current = socket; // Store socket in ref
+    socketRef.current = socket;
 
     socket.on("connect", () => {
       console.log("Socket connected with ID:", socket.id);
-      dispatch(setSocket(socket)); // Still dispatch but slice will only store ID
     });
 
     socket.on("getOnlineUsers", (users) => {
@@ -50,7 +48,6 @@ function App() {
       }
     };
   }, [authUser?._id, dispatch]);
-
 
   return (
     <div
