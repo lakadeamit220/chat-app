@@ -3,22 +3,28 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import io from "socket.io-client";
 import { useState } from "react";
+import { setSocket } from "./reduxStore/socketSlice";
+import { setOnlineUsers } from "./reduxStore/userSlice";
 
 function App() {
-  const [socket, setSocket] = useState(null);
   const { authUser } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (authUser) {
-      const socket = io("http://localhost:8080", {
-        query:{
-          userId:authUser._id,
-        }
+      const socketio = io("http://localhost:8080", {
+        query: {
+          userId: authUser._id,
+        },
       });
-      setSocket(socket);
+      dispatch(setSocket(socketio));
+      socketio?.on("getOnlineUsers", (onlineUsers) => {
+        dispatch(setOnlineUsers(onlineUsers));
+      });
+      return () => socketio.close();
     }
   }, [authUser]);
   return (
