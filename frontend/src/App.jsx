@@ -12,12 +12,13 @@ import io from "socket.io-client";
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const socketRef = useRef(null); // Store socket instance in a ref
 
   useEffect(() => {
     if (!authUser?._id) return;
 
     console.log("Initializing socket connection for user:", authUser._id);
-
+    
     const socket = io("http://localhost:8080", {
       query: { userId: authUser._id },
       withCredentials: true,
@@ -25,13 +26,14 @@ function App() {
       reconnectionDelay: 1000,
     });
 
+    socketRef.current = socket; // Store socket in ref
+
     socket.on("connect", () => {
       console.log("Socket connected with ID:", socket.id);
-      dispatch(setSocket(socket));
+      dispatch(setSocket(socket)); // Still dispatch but slice will only store ID
     });
 
     socket.on("getOnlineUsers", (users) => {
-      // Changed to match emit event name
       console.log("Received online users:", users);
       dispatch(setOnlineUsers(users));
     });
@@ -42,9 +44,13 @@ function App() {
 
     return () => {
       console.log("Cleaning up socket connection");
-      socket.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     };
   }, [authUser?._id, dispatch]);
+
 
   return (
     <div
