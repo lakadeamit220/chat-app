@@ -2,13 +2,14 @@ import { useState } from "react";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../reduxStore/messageSlice";
+import { addMessage } from "../reduxStore/messageSlice"; // Import addMessage instead of setMessages
 
 const SendInput = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const { selectedUser } = useSelector((store) => store.user);
-  const { messages } = useSelector((store) => store.message);
+  
+  // No longer need to get messages from store since we're using addMessage
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ const SendInput = () => {
       );
 
       if (res.data?.newMessage) {
-        dispatch(setMessages([...messages, res.data.newMessage]));
+        dispatch(addMessage(res.data.newMessage)); // Use addMessage instead
       }
     } catch (error) {
       console.error("Error sending message:", error);
